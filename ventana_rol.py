@@ -10,145 +10,111 @@ from sistema_academico import (
     Curso
 )
 
-
-
-
-
 def abrir_ventana_rol(master):
     siguiente = tk.Toplevel(master)
-    siguiente.title("¿Quien eres?")
+    siguiente.title("¿Quién eres?")
     siguiente.geometry("400x300")
+    siguiente.configure(bg="#f4f6f7")
 
-    label = tk.Label(siguiente, text="¿Quien eres?", font=("Arial", 16, "bold"))
+    label = tk.Label(
+        siguiente,
+        text="¿Quién eres?",
+        font=("Arial", 18, "bold"),
+        bg="#f4f6f7",
+        fg="#2c3e50"
+    )
     label.pack(pady=20)
 
+    estilo_boton = {
+        "width": 15,
+        "height": 2,
+        "font": ("Arial", 12, "bold"),
+        "bg": "#3498db",
+        "fg": "white",
+        "activebackground": "#2980b9",
+        "activeforeground": "white",
+        "bd": 0,
+        "relief": "flat",
+        "cursor": "hand2"
+    }
+
     btn_alumno = tk.Button(
-        siguiente, text="Alumno", width=15, height=3,
-        command=lambda: mostrar_opciones(siguiente, "Alumno")
+        siguiente, text="Alumno",
+        command=lambda: mostrar_opciones(siguiente, "Alumno"),
+        **estilo_boton
     )
     btn_alumno.pack(pady=10)
 
-
-
     btn_docente = tk.Button(
-        siguiente, text="Docente", width=15, height=3,
-        command=lambda: mostrar_opciones(siguiente, "Docente")
+        siguiente, text="Docente",
+        command=lambda: mostrar_opciones(siguiente, "Docente"),
+        **estilo_boton
     )
     btn_docente.pack(pady=10)
 
 
-
-
 def mostrar_opciones(ventana, rol):
+    parent = ventana.master
     ventana.destroy()
-    ventana_opciones = tk.Toplevel()
+
+    ventana_opciones = tk.Toplevel(parent)
     ventana_opciones.title(f"Opciones para {rol}")
-    ventana_opciones.geometry("400x400")
+    ventana_opciones.geometry("450x400")
+    ventana_opciones.configure(bg="#ecf0f1")
 
     label = tk.Label(
-        ventana_opciones, text=f"Selecciona ",
-        font=("Arial", 16, "bold")
+        ventana_opciones,
+        text=f"Selecciona una opción ({rol})",
+        font=("Arial", 16, "bold"),
+        bg="#ecf0f1",
+        fg="#2c3e50"
     )
     label.pack(pady=20)
 
+    estilo_boton = {
+        "width": 20,
+        "height": 2,
+        "font": ("Arial", 11, "bold"),
+        "bg": "#1abc9c",
+        "fg": "white",
+        "activebackground": "#16a085",
+        "activeforeground": "white",
+        "bd": 0,
+        "relief": "flat",
+        "cursor": "hand2"
+    }
+
     if rol == "Alumno":
-        btn_registro = tk.Button(
-            ventana_opciones, text="Registrarse", width=20, height=2,
-            command=ventana_registro_alumno
-        )
-        btn_iniciar_sesion = tk.Button(
-            ventana_opciones, text="Iniciar sesión", width=20, height=2,
-            command=ventana_login_alumno
-        )
-
-
-
-
+        btn_registro = tk.Button(ventana_opciones, text="Registrarse", command=ventana_registro_alumno, **estilo_boton)
+        btn_login = tk.Button(ventana_opciones, text="Iniciar sesión", command=ventana_login_alumno, **estilo_boton)
     else:
-        btn_registro = tk.Button(
-            ventana_opciones, text="Registrarse", width=20, height=2,
-            command=ventana_registro_docente
-        )
-        btn_iniciar_sesion = tk.Button(
-            ventana_opciones, text="Iniciar sesión", width=20, height=2,
-            command=ventana_login_docente
-        )
-        btn_gestion = tk.Button(
-            ventana_opciones, text="Gestionar Cursos", width=20, height=2,
-            command=lambda: gestionar_cursos("Docente")
-        )
+        btn_registro = tk.Button(ventana_opciones, text="Registrarse", command=ventana_registro_docente, **estilo_boton)
+        btn_login = tk.Button(ventana_opciones, text="Iniciar sesión", command=ventana_login_docente, **estilo_boton)
 
-    btn_registro.pack(pady=5)
-    btn_iniciar_sesion.pack(pady=5)
-    btn_gestion.pack(pady=5)
+    btn_registro.pack(pady=10)
+    btn_login.pack(pady=10)
 
-    btn_regresar = tk.Button(
-        ventana_opciones, text="Regresar", width=20, height=2,
-        command=ventana_opciones.destroy
+    def volver():
+        ventana_opciones.destroy()
+        abrir_ventana_rol(parent)
+
+    def salir():
+        parent.destroy()
+
+    btn_volver = tk.Button(
+        ventana_opciones, text=" Volver",
+        bg="#f39c12", fg="white", font=("Arial", 10, "bold"),
+        activebackground="#e67e22", activeforeground="white",
+        bd=0, relief="flat", cursor="hand2",
+        command=volver
     )
-    btn_regresar.pack(pady=20)
+    btn_volver.place(x=20, y=340, width=100, height=35)
 
-
-def gestionar_cursos(rol):
-    ventana_gestion = tk.Toplevel()
-    ventana_gestion.title(f"Gestión de Cursos - {rol}")
-    ventana_gestion.geometry("400x400")
-
-    label = tk.Label(ventana_gestion, text=f"Gestión de Cursos ({rol})", font=("Arial", 14, "bold"))
-    label.pack(pady=10)
-
-    tk.Label(ventana_gestion, text="Nombre del curso:").pack(pady=5)
-    entry_curso = tk.Entry(ventana_gestion)
-    entry_curso.pack(pady=5)
-
-    tk.Label(ventana_gestion, text="Número de aula:").pack(pady=5)
-    entry_aula = tk.Entry(ventana_gestion)
-    entry_aula.pack(pady=5)
-
-    def agregar_curso():
-        nombre = entry_curso.get()
-        aula = entry_aula.get()
-        if not nombre or not aula:
-            messagebox.showwarning("Error", "Debe llenar todos los campos.")
-            return
-
-        curso = Curso(nombre, aula)
-
-        if rol == "Alumno":
-            alumno = Alumno("Temp", "temp@correo.com")  # demo
-            alumno.registrar_curso(curso)
-        else:
-            docente = Docente("Temp", "docente@correo.com")  # demo
-            docente.registrar_curso(curso)
-
-        messagebox.showinfo("Éxito", f"Curso '{nombre}' agregado correctamente.")
-
-    def activar_notificaciones():
-        if rol == "Alumno":
-            alumno = Alumno("Temp", "temp@correo.com")
-            alumno.activar_notificaciones()
-        else:
-            docente = Docente("Temp", "docente@correo.com")
-            docente.activar_notificaciones()
-        messagebox.showinfo("Notificaciones", "Notificaciones activadas.")
-
-    def desactivar_notificaciones():
-        if rol == "Alumno":
-            alumno = Alumno("Temp", "temp@correo.com")
-            alumno.desactivar_notificaciones()
-        else:
-            docente = Docente("Temp", "docente@correo.com")
-            docente.desactivar_notificaciones()
-        messagebox.showinfo("Notificaciones", "Notificaciones desactivadas.")
-
-    btn_agregar = tk.Button(ventana_gestion, text="Agregar curso", command=agregar_curso)
-    btn_agregar.pack(pady=10)
-
-    btn_activar = tk.Button(ventana_gestion, text="Activar notificaciones", command=activar_notificaciones)
-    btn_activar.pack(pady=10)
-
-    btn_desactivar = tk.Button(ventana_gestion, text="Desactivar notificaciones", command=desactivar_notificaciones)
-    btn_desactivar.pack(pady=10)
-
-    btn_cerrar = tk.Button(ventana_gestion, text="Cerrar", command=ventana_gestion.destroy)
-    btn_cerrar.pack(pady=20)
+    btn_salir = tk.Button(
+        ventana_opciones, text="Salir ",
+        bg="#e74c3c", fg="white", font=("Arial", 10, "bold"),
+        activebackground="#c0392b", activeforeground="white",
+        bd=0, relief="flat", cursor="hand2",
+        command=salir
+    )
+    btn_salir.place(x=330, y=340, width=100, height=35)
