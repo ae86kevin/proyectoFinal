@@ -41,7 +41,6 @@ def abrir_ventana_rol(master):
     btn_alumno = tk.Button(
         siguiente, text="Alumno",
         command=lambda: mostrar_opciones(siguiente, "Alumno"),
-        **estilo_boton
     )
     btn_alumno.pack(pady=10)
 
