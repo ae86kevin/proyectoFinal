@@ -1,12 +1,16 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+from clases import Alumno
+from baseDatos import conectar
 
-def abrir_panel_principal(master, nombre_usuario="Usuario"):
+
+def abrir_panel_principal(master, usuario, rol):
     ventana = tk.Toplevel(master)
     ventana.title("Panel Principal")
-    ventana.geometry("400x400")
+    ventana.geometry("500x500")
     ventana.configure(bg="#f8f9fa")
 
+    nombre_usuario = usuario[1] if usuario and len(usuario) > 1 else "Usuario"
 
     tk.Label(
         ventana,
@@ -24,8 +28,7 @@ def abrir_panel_principal(master, nombre_usuario="Usuario"):
         fg="#16a085"
     ).place(x=140, y=20)
 
-
-    def crear_boton_outline(texto, comando=None):
+    def crear_boton(texto, comando=None):
         boton = tk.Button(
             ventana,
             text=texto,
@@ -46,19 +49,124 @@ def abrir_panel_principal(master, nombre_usuario="Usuario"):
         )
         return boton
 
-
     y = 80
     espacio = 60
 
-    btn_agregar = crear_boton_outline("Agregar Cursos", lambda: messagebox.showinfo("Agregar", "Función de agregar curso"))
-    btn_agregar.place(x=110, y=y)
+    tk.Label(ventana, text="Cantidad:").place(x=320, y=y + 5)
+    combo_cantidad = ttk.Combobox(ventana, values=[str(i) for i in range(1, 16)], width=3)
+    combo_cantidad.place(x=390, y=y + 5)
+    combo_cantidad.set("1")
 
-    btn_quitar = crear_boton_outline("Quitar cursos", lambda: messagebox.showinfo("Quitar", "Función de quitar curso"))
-    btn_quitar.place(x=110, y=y + espacio)
+    def agregar_cursos():
+        try:
+            cantidad = int(combo_cantidad.get())
+        except ValueError:
+            messagebox.showerror("Error", "Selecciona una cantidad válida.")
+            return
 
-    btn_modificar = crear_boton_outline("Modificar", lambda: messagebox.showinfo("Modificar", "Función de modificar curso"))
-    btn_modificar.place(x=110, y=y + espacio * 2)
+        abrir_formulario_cursos(usuario, cantidad)
 
+    def listar_cursos():
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, nombre, aula, hora_inicio FROM cursos WHERE alumno_id=?", (usuario[0],))
+        cursos = cursor.fetchall()
+        conn.close()
+        return cursos
+
+    def quitar_curso():
+        cursos = listar_cursos()
+        if not cursos:
+            messagebox.showinfo("Sin cursos", "No tienes cursos asignados.")
+            return
+
+        win = tk.Toplevel(ventana)
+        win.title("Quitar curso")
+        win.geometry("350x300")
+
+        tk.Label(win, text="Selecciona un curso para eliminar").pack(pady=10)
+        lista = tk.Listbox(win, width=40, height=10)
+        lista.pack(pady=10)
+
+        for c in cursos:
+            lista.insert(tk.END, f"{c[0]} - {c[1]} ({c[2]})")
+
+        def eliminar():
+            seleccion = lista.curselection()
+            if not seleccion:
+                messagebox.showwarning("Atención", "Selecciona un curso.")
+                return
+            curso_id = cursos[seleccion[0]][0]
+            conn = conectar()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM cursos WHERE id=?", (curso_id,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Éxito", "Curso eliminado.")
+            win.destroy()
+
+        tk.Button(win, text="Eliminar", bg="#e74c3c", fg="white", command=eliminar).pack(pady=10)
+
+    def modificar_curso():
+        cursos = listar_cursos()
+        if not cursos:
+            messagebox.showinfo("Sin cursos", "No tienes cursos asignados.")
+            return
+
+        win = tk.Toplevel(ventana)
+        win.title("Modificar curso")
+        win.geometry("400x400")
+
+        tk.Label(win, text="Selecciona un curso para modificar").pack(pady=10)
+        lista = tk.Listbox(win, width=45, height=10)
+        lista.pack(pady=10)
+
+        for c in cursos:
+            lista.insert(tk.END, f"{c[0]} - {c[1]} ({c[2]})")
+
+        tk.Label(win, text="Nuevo nombre:").pack()
+        entry_nombre = tk.Entry(win)
+        entry_nombre.pack(pady=5)
+
+        tk.Label(win, text="Nueva aula:").pack()
+        entry_aula = tk.Entry(win)
+        entry_aula.pack(pady=5)
+
+        tk.Label(win, text="Nuevo horario:").pack()
+        entry_hora = tk.Entry(win)
+        entry_hora.pack(pady=5)
+
+        def guardar():
+            seleccion = lista.curselection()
+            if not seleccion:
+                messagebox.showwarning("Atención", "Selecciona un curso.")
+                return
+
+            curso_id = cursos[seleccion[0]][0]
+            nombre = entry_nombre.get().strip()
+            aula = entry_aula.get().strip()
+            hora = entry_hora.get().strip()
+
+            if not nombre or not aula or not hora:
+                messagebox.showwarning("Campos vacíos", "Completa todos los campos.")
+                return
+
+            conn = conectar()
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE cursos SET nombre=?, aula=?, hora_inicio=? WHERE id=?",
+                (nombre, aula, hora, curso_id)
+            )
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Éxito", "Curso modificado correctamente.")
+            win.destroy()
+
+        tk.Button(win, text="Guardar cambios", bg="#16a085", fg="white", command=guardar).pack(pady=10)
+
+    crear_boton("Agregar Cursos", agregar_cursos).place(x=110, y=y)
+    crear_boton("Quitar Cursos", quitar_curso).place(x=110, y=y + espacio)
+    crear_boton("Modificar", modificar_curso).place(x=110, y=y + espacio * 2)
 
     def salir():
         master.destroy()
@@ -67,12 +175,60 @@ def abrir_panel_principal(master, nombre_usuario="Usuario"):
         ventana.destroy()
         messagebox.showinfo("Volver", "Volviendo al menú anterior...")
 
-    btn_salir = crear_boton_outline("Salir", salir)
-    btn_salir.place(x=80, y=320)
+    crear_boton("Salir", salir).place(x=100, y=420)
+    crear_boton("Volver", volver).place(x=260, y=420)
 
-    btn_volver = crear_boton_outline("Volver", volver)
-    btn_volver.place(x=220, y=320)
-
-
-    ventana.update()
     ventana.resizable(False, False)
+
+
+def abrir_formulario_cursos(usuario, cantidad):
+
+    win = tk.Toplevel()
+    win.title(f"Agregar {cantidad} curso(s)")
+    win.geometry("600x{}".format(100 + cantidad*50))
+
+    tk.Label(win, text=f"Agregar {cantidad} curso(s)", font=("Arial", 12, "bold")).pack(pady=10)
+
+    contenedor = tk.Frame(win)
+    contenedor.pack(pady=5)
+
+    entradas = []
+
+    for i in range(cantidad):
+        fila = tk.Frame(contenedor)
+        fila.pack(anchor="w", pady=5)
+
+        tk.Label(fila, text=f"Curso {i+1}:").pack(side="left", padx=5)
+        nombre = tk.Entry(fila, width=20)
+        nombre.pack(side="left", padx=5)
+
+        tk.Label(fila, text="Aula:").pack(side="left", padx=5)
+        aula = tk.Entry(fila, width=10)
+        aula.pack(side="left", padx=5)
+
+        tk.Label(fila, text="Horario:").pack(side="left", padx=5)
+        hora = tk.Entry(fila, width=10)
+        hora.pack(side="left", padx=5)
+
+        entradas.append((nombre, aula, hora))
+
+    def guardar_todos():
+        conn = conectar()
+        cursor = conn.cursor()
+        for nombre, aula, hora in entradas:
+            n = nombre.get().strip()
+            a = aula.get().strip()
+            h = hora.get().strip()
+            if not n or not a or not h:
+                messagebox.showwarning("C", "Completa todos los campos antes de guardar.")
+                return
+            cursor.execute(
+                "INSERT INTO cursos (alumno_id, nombre, aula, hora_inicio) VALUES (?, ?, ?, ?)",
+                (usuario[0], n, a, h)
+            )
+        conn.commit()
+        conn.close()
+        messagebox.showinfo("Éxito", f"Se agregaron {cantidad} curso(s) correctamente.")
+        win.destroy()
+
+    tk.Button(win, text="Guardar todos", bg="#1abc9c", fg="white", command=guardar_todos).pack(pady=15)
