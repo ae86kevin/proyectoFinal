@@ -25,10 +25,21 @@ def crear_tablas():
         )
     ''')
 
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS cursos
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    alumno_id INTEGER NOT NULL,
+    nombre   text NOT NULL,
+    aula TEXT NOT NULL,
+    hora_inicio TEXT NOT NULL,
+    )
+    ''')
+
+
+
     conn.commit()
     conn.close()
 
-# Crear tablas al iniciar
 crear_tablas()
 
 
