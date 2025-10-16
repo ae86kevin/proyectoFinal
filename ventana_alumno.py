@@ -32,7 +32,7 @@ def ventana_registro_alumno(master):
         else:
             messagebox.showerror("Error", "El correo ya está registrado.")
 
-    tk.Button(win, text="Registrar", command=registrar, bg="#1abc9c", fg="white").pack(pady=20)
+    tk.Button(win, text="Registrar", command=registrar, fg="white").pack(pady=20)
 
 
 def ventana_login_alumno(master):
@@ -50,10 +50,9 @@ def ventana_login_alumno(master):
         alumno = Alumno.iniciar_sesion(correo)
 
         if alumno:
-            messagebox.showinfo("Bienvenido", f"Hola {alumno[1]} 👋")
             win.destroy()
             abrir_panel_principal(master, alumno, "Alumno")
         else:
             messagebox.showerror("Error", "Correo no encontrado.")
 
-    tk.Button(win, text="Iniciar Sesión", command=login, bg="#3498db", fg="white").pack(pady=20)
+    tk.Button(win, text="Iniciar Sesión", command=login, fg="white").pack(pady=20)

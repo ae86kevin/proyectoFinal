@@ -33,8 +33,6 @@ def abrir_panel_principal(master, usuario, rol):
             ventana,
             text=texto,
             font=("Arial", 11, "bold"),
-            bg="#f8f9fa",
-            fg="#2c3e50",
             activebackground="#f8f9fa",
             activeforeground="#16a085",
             relief="flat",
@@ -53,18 +51,16 @@ def abrir_panel_principal(master, usuario, rol):
     espacio = 60
 
     tk.Label(ventana, text="Cantidad:").place(x=320, y=y + 5)
-    combo_cantidad = ttk.Combobox(ventana, values=[str(i) for i in range(1, 16)], width=3)
-    combo_cantidad.place(x=390, y=y + 5)
-    combo_cantidad.set("1")
+    combo_cantidad = ttk.Combobox(ventana, values=[str(i) for i in range(0, 16)], width=3)
+    combo_cantidad.place(x=400, y=y + 5)
+    combo_cantidad.set("0")
 
     def agregar_cursos():
         try:
             cantidad = int(combo_cantidad.get())
         except ValueError:
-            messagebox.showerror("Error", "Selecciona una cantidad válida.")
+            messagebox.showerror("Seleccion no valido")
             return
-
-        abrir_formulario_cursos(usuario, cantidad)
 
     def listar_cursos():
         conn = conectar()
@@ -105,7 +101,7 @@ def abrir_panel_principal(master, usuario, rol):
             messagebox.showinfo("Éxito", "Curso eliminado.")
             win.destroy()
 
-        tk.Button(win, text="Eliminar", bg="#e74c3c", fg="white", command=eliminar).pack(pady=10)
+        tk.Button(win, text="Eliminar", fg="white", command=eliminar).pack(pady=10)
 
     def modificar_curso():
         cursos = listar_cursos()
@@ -182,10 +178,9 @@ def abrir_panel_principal(master, usuario, rol):
 
 
 def abrir_formulario_cursos(usuario, cantidad):
-
     win = tk.Toplevel()
     win.title(f"Agregar {cantidad} curso(s)")
-    win.geometry("600x{}".format(100 + cantidad*50))
+    win.geometry("600x{}".format(100 + cantidad * 50))
 
     tk.Label(win, text=f"Agregar {cantidad} curso(s)", font=("Arial", 12, "bold")).pack(pady=10)
 
@@ -198,7 +193,7 @@ def abrir_formulario_cursos(usuario, cantidad):
         fila = tk.Frame(contenedor)
         fila.pack(anchor="w", pady=5)
 
-        tk.Label(fila, text=f"Curso {i+1}:").pack(side="left", padx=5)
+        tk.Label(fila, text=f"Curso {i + 1}:").pack(side="left", padx=5)
         nombre = tk.Entry(fila, width=20)
         nombre.pack(side="left", padx=5)
 

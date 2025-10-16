@@ -66,11 +66,11 @@ def mostrar_opciones(ventana, rol):
     }
 
     if rol == "Alumno":
-        tk.Button(ventana_opciones, text="Registrarse", command=lambda: ventana_registro_alumno(parent), **estilo_boton).pack(pady=10)
-        tk.Button(ventana_opciones, text="Iniciar sesión", command=lambda: ventana_login_alumno(parent), **estilo_boton).pack(pady=10)
+        tk.Button(ventana_opciones, text="Registrarse", command=lambda: ventana_registro_alumno(parent), ).pack(pady=10)
+        tk.Button(ventana_opciones, text="Iniciar sesión", command=lambda: ventana_login_alumno(parent),).pack(pady=10)
     else:
-        tk.Button(ventana_opciones, text="Registrarse", command=lambda: ventana_registro_docente(parent), **estilo_boton).pack(pady=10)
-        tk.Button(ventana_opciones, text="Iniciar sesión", command=lambda: ventana_login_docente(parent), **estilo_boton).pack(pady=10)
+        tk.Button(ventana_opciones, text="Registrarse", command=lambda: ventana_registro_docente(parent), ).pack(pady=10)
+        tk.Button(ventana_opciones, text="Iniciar sesión", command=lambda: ventana_login_docente(parent),).pack(pady=10)
 
     def volver():
         ventana_opciones.destroy()

@@ -12,6 +12,11 @@ root.geometry("500x400")
 tk.Label(root, text="USchedelud", font=("Arial", 36, "bold")).pack(expand=True)
 tk.Button(root, text="Términos y condiciones", command=mostrar_terminos).pack(pady=20)
 
-root.bind("<Return>", lambda event: abrir_ventana_rol(root))
 
+
+
+
+root.bind("<Return>", lambda event: abrir_ventana_rol(root))
 root.mainloop()
+
+

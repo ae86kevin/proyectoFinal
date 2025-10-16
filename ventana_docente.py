@@ -49,7 +49,7 @@ def ventana_login_docente(master):
         docente = Docente.iniciar_sesion(correo)
 
         if docente:
-            messagebox.showinfo("Bienvenido", f"Hola {docente[1]} 👋")
+            messagebox.showinfo("Bienvenido", f"Hola {docente[1]} ")
             win.destroy()
             abrir_panel_principal(master, docente, "Docente")
         else:
