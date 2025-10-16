@@ -96,6 +96,7 @@ def abrir_panel_principal(master, usuario, rol):
             conn = conectar()
             cursor = conn.cursor()
             cursor.execute("DELETE FROM cursos WHERE id=?", (curso_id,))
+
             conn.commit()
             conn.close()
             messagebox.showinfo("Éxito", "Curso eliminado.")
