@@ -1,6 +1,9 @@
 import tkinter as tk
 from ventana_rol import abrir_ventana_rol
 from tkinter import messagebox
+from baseDatos import crear_tablas
+
+crear_tablas()
 
 def mostrar_terminos():
     messagebox.showinfo("Términos y condiciones", "************.")

@@ -1,11 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox
-from clases import Alumno
 from ventanPrincipal import abrir_panel_principal
+from clases import Alumno
 
 
 def ventana_registro_alumno(master):
-
     win = tk.Toplevel(master)
     win.title("Registro de Alumno")
     win.geometry("400x300")
@@ -32,11 +31,10 @@ def ventana_registro_alumno(master):
         else:
             messagebox.showerror("Error", "El correo ya está registrado.")
 
-    tk.Button(win, text="Registrar", command=registrar, fg="white").pack(pady=20)
+    tk.Button(win, text="Registrar", command=registrar, fg="white", bg="green").pack(pady=20)
 
 
 def ventana_login_alumno(master):
-
     win = tk.Toplevel(master)
     win.title("Login de Alumno")
     win.geometry("400x250")
@@ -55,4 +53,4 @@ def ventana_login_alumno(master):
         else:
             messagebox.showerror("Error", "Correo no encontrado.")
 
-    tk.Button(win, text="Iniciar Sesión", command=login, fg="white").pack(pady=20)
+    tk.Button(win, text="Iniciar Sesión", command=login, fg="white", bg="blue").pack(pady=20)

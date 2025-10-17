@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
-from clases import Docente
 from ventanPrincipal import abrir_panel_principal
+from clases import Docente
 
 def ventana_registro_docente(master):
 
