@@ -53,4 +53,4 @@ def ventana_login_alumno(master):
         else:
             messagebox.showerror("Error", "Correo no encontrado.")
 
-    tk.Button(win, text="Iniciar Sesión", command=login, fg="white", bg="blue").pack(pady=20)
+    tk.Button(win, text="Iniciar Sesión", command=login, fg="white", bg="green").pack(pady=20)

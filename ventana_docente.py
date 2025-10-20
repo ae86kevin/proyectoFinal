@@ -22,14 +22,14 @@ def ventana_registro_docente(master):
         correo = entry_correo.get().strip()
 
         if not nombre or not correo:
-            messagebox.showwarning("Campos vacíos", "Completa todos los campos.")
+            messagebox.showwarning("Campos vacios", "Debe de completar los campos.")
             return
 
         if Docente.registrar(nombre, correo):
-            messagebox.showinfo("Éxito", "Docente registrado correctamente.")
+            messagebox.showinfo("Exito", "Docente registrado correctamente.")
             win.destroy()
         else:
-            messagebox.showerror("Error", "El correo ya está registrado.")
+            messagebox.showerror("Error", "El correo ya registrado.")
 
     tk.Button(win, text="Registrar", command=registrar, bg="#1abc9c", fg="white").pack(pady=20)
 

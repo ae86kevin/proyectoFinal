@@ -1,3 +1,4 @@
+
 import tkinter as tk
 from tkinter import messagebox, ttk
 from baseDatos import conectar
@@ -18,17 +19,11 @@ def abrir_panel_principal(master, usuario, rol):
     tk.Label(ventana, text=f"Bienvenido:", font=("Arial", 12, "bold"), bg="#f8f9fa", fg="#2c3e50").place(x=40, y=20)
     tk.Label(ventana, text=nombre_usuario, font=("Arial", 12), bg="#f8f9fa", fg="#16a085").place(x=140, y=20)
 
-    # --- Botones con estilo ---
     def crear_boton(texto, comando=None):
         return tk.Button(
             ventana,
             text=texto,
-            font=("Arial", 11, "bold"),
-            activebackground="#f8f9fa",
-            activeforeground="#16a085",
-            relief="flat",
-            bd=2,
-            highlightthickness=2,
+            font=("Arial", 11, "bold"),activebackground="#f8f9fa",activeforeground="#16a085",relief="flat",bd=2,highlightthickness=2,
             highlightbackground="#16a085",
             highlightcolor="#16a085",
             cursor="hand2",
@@ -40,7 +35,6 @@ def abrir_panel_principal(master, usuario, rol):
     y = 80
     espacio = 60
 
-    # --- Combo para cantidad de cursos ---
     tk.Label(ventana, text="Cantidad:").place(x=320, y=y + 5)
     combo_cantidad = ttk.Combobox(ventana, values=[str(i) for i in range(0, 16)], width=3)
     combo_cantidad.place(x=400, y=y + 5)
@@ -168,7 +162,7 @@ def abrir_panel_principal(master, usuario, rol):
 
     def volver():
         ventana.destroy()
-        messagebox.showinfo("Volver", "Volviendo al menú anterior...")
+        messagebox.showinfo("Volver", "Regresando al menu....")
 
     crear_boton("Salir", salir).place(x=100, y=340)
     crear_boton("Volver", volver).place(x=260, y=340)

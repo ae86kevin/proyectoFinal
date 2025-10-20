@@ -2,10 +2,8 @@ import sqlite3
 
 DB_NAME = "sistema_academico.db"
 
-
 def conectar():
     return sqlite3.connect(DB_NAME)
-
 
 def crear_tablas():
     conn = conectar()
@@ -30,11 +28,13 @@ def crear_tablas():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cursos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            alumno_id INTEGER NOT NULL,
+            alumno_id INTEGER,
+            docente_id INTEGER,
             nombre TEXT NOT NULL,
             aula TEXT NOT NULL,
             hora_inicio TEXT NOT NULL,
-            FOREIGN KEY(alumno_id) REFERENCES alumnos(id)
+            FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
+            FOREIGN KEY (docente_id) REFERENCES docentes(id)
         )
     """)
 
