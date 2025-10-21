@@ -1,31 +1,26 @@
 import sqlite3
 from baseDatos import conectar
 
-DB_NAME = "sistema_academico.db"
-
-
 class Curso:
     def __init__(self, nombre, aula, hora_inicio):
         self.nombre = nombre
         self.aula = aula
         self.hora_inicio = hora_inicio
 
-
-
 class Usuario:
     def __init__(self, nombre="", correo=""):
         self.nombre = nombre
         self.correo = correo
 
-
 class Alumno(Usuario):
     @staticmethod
-    def registrar(nombre, correo):
+    def registrar(nombre, correo, contrasena):
         conn = conectar()
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO alumnos (nombre, correo) VALUES (?, ?)", (nombre, correo)
+                "INSERT INTO alumnos (nombre, correo, contrasena) VALUES (?, ?, ?)",
+                (nombre, correo, contrasena)
             )
             conn.commit()
             return True
@@ -34,23 +29,36 @@ class Alumno(Usuario):
         finally:
             conn.close()
 
+
+
+
+
+
     @staticmethod
-    def iniciar_sesion(correo):
+    def iniciar_sesion(correo, contrasena):
         conn = conectar()
         cursor = conn.cursor()
-        cursor.execute("SELECT id, nombre, correo FROM alumnos WHERE correo = ?", (correo,))
-        alumno = cursor.fetchone()
+        cursor.execute("SELECT id, nombre, contrasena FROM alumnos WHERE correo = ?", (correo,))
+        fila = cursor.fetchone()
         conn.close()
-        return alumno
+        if not fila:
+            return None
+        ingreso = fila[2]
+        if ingreso == contrasena:
+            return (fila[0], fila[1])
+        return None
+
+
 
 class Docente(Usuario):
     @staticmethod
-    def registrar(nombre, correo):
+    def registrar(nombre, correo, contrasena):
         conn = conectar()
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO docentes (nombre, correo) VALUES (?, ?)", (nombre, correo)
+                "INSERT INTO docentes (nombre, correo, contrasena) VALUES (?, ?, ?)",
+                (nombre, correo, contrasena)
             )
             conn.commit()
             return True
@@ -59,11 +67,21 @@ class Docente(Usuario):
         finally:
             conn.close()
 
+
+
+
+
+
     @staticmethod
-    def iniciar_sesion(correo):
+    def iniciar_sesion(correo, contrasena):
         conn = conectar()
         cursor = conn.cursor()
-        cursor.execute("SELECT id, nombre, correo FROM docentes WHERE correo = ?", (correo,))
-        docente = cursor.fetchone()
+        cursor.execute("SELECT id, nombre, contrasena FROM docentes WHERE correo = ?", (correo,))
+        fila = cursor.fetchone()
         conn.close()
-        return docente
+        if not fila:
+            return None
+        ingreso2 = fila[2]
+        if ingreso2 == contrasena:
+            return (fila[0], fila[1])
+        return None

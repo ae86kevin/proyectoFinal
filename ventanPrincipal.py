@@ -1,7 +1,18 @@
-
 import tkinter as tk
 from tkinter import messagebox, ttk
 from baseDatos import conectar
+from notificador import enviar_correo
+import schedule
+import threading
+import time
+import re
+
+def run_schedule():
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
+
+threading.Thread(target=run_schedule, daemon=True).start()
 
 def abrir_panel_principal(master, usuario, rol):
     ventana = tk.Toplevel(master)
@@ -16,14 +27,31 @@ def abrir_panel_principal(master, usuario, rol):
         nombre_usuario = usuario[1] if usuario and len(usuario) > 1 else "Usuario"
         usuario_id = usuario[0] if usuario else None
 
-    tk.Label(ventana, text=f"Bienvenido:", font=("Arial", 12, "bold"), bg="#f8f9fa", fg="#2c3e50").place(x=40, y=20)
-    tk.Label(ventana, text=nombre_usuario, font=("Arial", 12), bg="#f8f9fa", fg="#16a085").place(x=140, y=20)
+    tk.Label(ventana,
+             text=f"Bienvenido:",
+             font=("Arial", 12, "bold"),
+             bg="#f8f9fa",
+             fg="#2c3e50").place(x=40, y=20)
+
+
+    tk.Label(ventana,
+             text=nombre_usuario,
+             font=("Arial", 12),
+             bg="#f8f9fa",
+             fg="#16a085").place(x=140, y=20)
+
+
 
     def crear_boton(texto, comando=None):
         return tk.Button(
             ventana,
             text=texto,
-            font=("Arial", 11, "bold"),activebackground="#f8f9fa",activeforeground="#16a085",relief="flat",bd=2,highlightthickness=2,
+            font=("Arial", 11, "bold"),
+            activebackground="#f8f9fa",
+            activeforeground="#16a085",
+            relief="flat",
+            bd=2,
+            highlightthickness=2,
             highlightbackground="#16a085",
             highlightcolor="#16a085",
             cursor="hand2",
@@ -92,7 +120,6 @@ def abrir_panel_principal(master, usuario, rol):
         entry_hora.pack(pady=5)
 
         def validar_hora(hora):
-            import re
             return bool(re.match(r"^(?:[01]\d|2[0-3]):[0-5]\d$", hora))
 
         def guardar():
@@ -170,7 +197,6 @@ def abrir_panel_principal(master, usuario, rol):
     ventana.resizable(False, False)
 
 
-
 def abrir_formulario_cursos(usuario_id, cantidad, rol):
     win = tk.Toplevel()
     win.title(f"Agregar {cantidad} curso(s)")
@@ -201,10 +227,10 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
         entradas.append((nombre, aula, hora))
 
     def validar_hora(hora):
-        import re
         return bool(re.match(r"^(?:[01]\d|2[0-3]):[0-5]\d$", hora))
 
     def guardar_todos():
+        cursos_guardados = []
         conn = conectar()
         cursor = conn.cursor()
         for nombre, aula, hora in entradas:
@@ -218,6 +244,8 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
                 messagebox.showerror("Error", "Ingrese la hora en formato 24h (HH:MM)")
                 return
 
+            cursos_guardados.append((n, a, h))
+
             if rol.lower() == "alumno":
                 cursor.execute(
                     "INSERT INTO cursos (alumno_id, nombre, aula, hora_inicio) VALUES (?, ?, ?, ?)",
@@ -230,7 +258,35 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
                 )
         conn.commit()
         conn.close()
+
+        conn = conectar()
+        cursor = conn.cursor()
+        if rol.lower() == "alumno":
+            cursor.execute("SELECT correo, nombre FROM alumnos WHERE id=?", (usuario_id,))
+        else:
+            cursor.execute("SELECT correo, nombre FROM docentes WHERE id=?", (usuario_id,))
+        usuario_info = cursor.fetchone()
+        conn.close()
+
+        if usuario_info:
+            correo_destino, nombre_usuario = usuario_info
+            for curso, aula, hora in cursos_guardados:
+                mensaje = f"Hola {nombre_usuario},\n\nTu curso {curso} (Aula: {aula}) empieza a las {hora}."
+                # Enviar al momento de registro
+                try:
+                    enviar_correo(correo_destino, "Confirmación de curso registrado", mensaje)
+                except Exception as e:
+                    print(" Error al enviar correo:", e)
+
+                schedule.every().day.at(hora).do(
+                    lambda c=correo_destino, m=mensaje: enviar_correo(c, "Recordatorio de curso", m)
+                )
+
         messagebox.showinfo("Éxito", f"Se agregaron {cantidad} curso(s) correctamente.")
         win.destroy()
 
-    tk.Button(win, text="Guardar todos", bg="#1abc9c", fg="white", command=guardar_todos).pack(pady=15)
+    tk.Button(win,
+              text="Guardar todos",
+              bg="#1abc9c",
+              fg="white",
+              command=guardar_todos).pack(pady=15)

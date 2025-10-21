@@ -1,13 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
-from ventanPrincipal import abrir_panel_principal
 from clases import Alumno
-
+from ventanPrincipal import abrir_panel_principal
 
 def ventana_registro_alumno(master):
     win = tk.Toplevel(master)
     win.title("Registro de Alumno")
-    win.geometry("400x300")
+    win.geometry("400x320")
 
     tk.Label(win, text="Nombre:").pack(pady=5)
     entry_nombre = tk.Entry(win)
@@ -17,21 +16,34 @@ def ventana_registro_alumno(master):
     entry_correo = tk.Entry(win)
     entry_correo.pack(pady=5)
 
+    tk.Label(win, text="Contraseña:").pack(pady=5)
+    entry_pass = tk.Entry(win, show="*")
+    entry_pass.pack(pady=5)
+
+    tk.Label(win, text="Confirmar contraseña:").pack(pady=5)
+    entry_pass2 = tk.Entry(win, show="*")
+    entry_pass2.pack(pady=5)
+
     def registrar():
         nombre = entry_nombre.get().strip()
         correo = entry_correo.get().strip()
+        p1 = entry_pass.get()
+        p2 = entry_pass2.get()
 
-        if not nombre or not correo:
+        if not nombre or not correo or not p1 or not p2:
             messagebox.showwarning("Campos vacíos", "Completa todos los campos.")
             return
+        if p1 != p2:
+            messagebox.showwarning("Error", "Las contraseñas no coinciden.")
+            return
 
-        if Alumno.registrar(nombre, correo):
+        if Alumno.registrar(nombre, correo, p1):
             messagebox.showinfo("Éxito", "Alumno registrado correctamente.")
             win.destroy()
         else:
             messagebox.showerror("Error", "El correo ya está registrado.")
 
-    tk.Button(win, text="Registrar", command=registrar, fg="white", bg="green").pack(pady=20)
+    tk.Button(win, text="Registrar", command=registrar, fg="white", bg="green").pack(pady=10)
 
 
 def ventana_login_alumno(master):
@@ -43,14 +55,19 @@ def ventana_login_alumno(master):
     entry_correo = tk.Entry(win)
     entry_correo.pack(pady=5)
 
+    tk.Label(win, text="Contraseña:").pack(pady=5)
+    entry_pass = tk.Entry(win, show="*")
+    entry_pass.pack(pady=5)
+
     def login():
         correo = entry_correo.get().strip()
-        alumno = Alumno.iniciar_sesion(correo)
+        contrasena = entry_pass.get()
+        alumno = Alumno.iniciar_sesion(correo, contrasena)
 
         if alumno:
             win.destroy()
             abrir_panel_principal(master, alumno, "Alumno")
         else:
-            messagebox.showerror("Error", "Correo no encontrado.")
+            messagebox.showerror("Error", "Correo o contraseña incorrectos.")
 
-    tk.Button(win, text="Iniciar Sesión", command=login, fg="white", bg="green").pack(pady=20)
+    tk.Button(win, text="Iniciar Sesión", command=login, fg="white", bg="green").pack(pady=10)

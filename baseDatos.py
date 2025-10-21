@@ -13,7 +13,8 @@ def crear_tablas():
         CREATE TABLE IF NOT EXISTS alumnos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
-            correo TEXT UNIQUE NOT NULL
+            correo TEXT UNIQUE NOT NULL,
+            contrasena TEXT NOT NULL
         )
     """)
 
@@ -21,7 +22,8 @@ def crear_tablas():
         CREATE TABLE IF NOT EXISTS docentes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
-            correo TEXT UNIQUE NOT NULL
+            correo TEXT UNIQUE NOT NULL,
+            contrasena TEXT NOT NULL
         )
     """)
 
