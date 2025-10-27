@@ -46,11 +46,9 @@ def ventana_registro_docente(master):
     tk.Button(win, text="Registrar", command=registrar, bg="#1abc9c", fg="white").pack(pady=10)
 
 
-def ventana_login_docente(master):
-    win = tk.Toplevel(master)
-    win.title("Login de Docente")
+def ventana_login_docente(principal):
+    win = tk.Toplevel(principal)
     win.geometry("400x250")
-
     tk.Label(win, text="Correo:").pack(pady=10)
     entry_correo = tk.Entry(win)
     entry_correo.pack(pady=5)
@@ -67,7 +65,7 @@ def ventana_login_docente(master):
         if docente:
             messagebox.showinfo("Bienvenido", f"Hola {docente[1]} ")
             win.destroy()
-            abrir_panel_principal(master, docente, "Docente")
+            abrir_panel_principal(principal, docente, "Docente")
         else:
             messagebox.showerror("Error", "Correo o contraseña incorrectos.")
 

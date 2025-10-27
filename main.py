@@ -14,13 +14,13 @@ def mostrar_terminos():
     )
 
 root = tk.Tk()
-root.title("Uschedelud")
+root.title("UOscheduled")
 root.geometry("500x400")
 root.configure(bg="#e8f8f5")
 
 tk.Label(
     root,
-    text="USchedelud",
+    text="UOscheduled",
     font=("Arial", 36, "bold"),
     bg="#e8f8f5",
     fg="#2c3e50"

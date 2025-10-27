@@ -16,7 +16,7 @@ threading.Thread(target=run_schedule, daemon=True).start()
 
 def abrir_panel_principal(master, usuario, rol):
     ventana = tk.Toplevel(master)
-    ventana.title(f"Panel Principal - {rol}")
+    ventana.title(f"UOscheduled")
     ventana.geometry("500x400")
     ventana.configure(bg="#f8f9fa")
 
@@ -163,8 +163,16 @@ def abrir_panel_principal(master, usuario, rol):
             messagebox.showinfo("Éxito", "Curso eliminado correctamente.")
             win.destroy()
 
-        tk.Button(win, text="Guardar cambios", bg="#16a085", fg="white", command=guardar).pack(pady=10)
-        tk.Button(win, text="Eliminar curso", bg="#e74c3c", fg="white", command=eliminar).pack(pady=10)
+        tk.Button(win, text="Guardar cambios",
+                  bg="#16a085",
+                  fg="white",
+                  command=guardar).pack(pady=10)
+        tk.Button(win, text="Eliminar curso",
+                  bg="#e74c3c",
+                  fg="white",
+                  command=eliminar).pack(pady=10)
+
+
 
     crear_boton("Agregar Cursos", agregar_cursos).place(x=110, y=y)
     crear_boton("Modificar / Eliminar", modificar_curso).place(x=110, y=y + espacio)
