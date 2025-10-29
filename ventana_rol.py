@@ -6,9 +6,8 @@ def abrir_ventana_rol(master):
 
     master.withdraw()
 
-
     siguiente = tk.Toplevel(master)
-    siguiente.geometry("400x300")
+    siguiente.geometry("500x420")
     siguiente.configure(bg="#f4f6f7")
 
     tk.Label(
@@ -41,7 +40,7 @@ def mostrarOpciones(ventana, rol):
     ventana.destroy()
 
     ventanaOpciones = tk.Toplevel(principal)
-    ventanaOpciones.geometry("450x400")
+    ventanaOpciones.geometry("500x420")
     ventanaOpciones.configure(bg="#ecf0f1")
 
     tk.Label(
@@ -50,7 +49,7 @@ def mostrarOpciones(ventana, rol):
         font=("Arial", 16, "bold"),
         bg="#ecf0f1",
         fg="#2c3e50"
-    ).pack(pady=20)
+    ).pack(pady=40)
 
     estilo_boton = {
         "width": 20,
@@ -95,13 +94,38 @@ def mostrarOpciones(ventana, rol):
                   cursor="hand2",
                   width=20,
                   height=2,
-
                   command=lambda: ventana_login_alumno(principal),).pack(pady=10)
-    else:
-        tk.Button(ventanaOpciones, text="Registrarse",
+
+
+
+    elif rol == "Docente":
+        tk.Button(ventanaOpciones,
+                  text="Registrarse",
+                  font=("Arial",12,"bold"),
+                  bg="#3498db",
+                  fg="white",
+                  activebackground="#16a085",
+                  activeforeground="white",
+                  bd=0,
+                  relief="flat",
+                  cursor="hand2",
+                  width=20,
+                  height=2,
                   command=lambda: ventana_registro_docente(principal), ).pack(pady=10)
 
-        tk.Button(ventanaOpciones, text="Iniciar sesión",
+        tk.Button(ventanaOpciones,
+                  text="Iniciar sesión",
+                  font=("Arial", 12, "bold"),
+                  bg="#3498db",
+                  fg="white",
+                  activebackground="#16a085",
+                  activeforeground="white",
+                  bd=0,
+                  relief="flat",
+                  cursor="hand2",
+                  width=20,
+                  height=2,
+
                   command=lambda: ventana_login_docente(principal),).pack(pady=10)
 
 

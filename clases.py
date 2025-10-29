@@ -7,6 +7,7 @@ class Curso:
         self.aula = aula
         self.hora_inicio = hora_inicio
 
+
 class Usuario:
     def __init__(self, nombre="", correo=""):
         self.nombre = nombre
@@ -76,7 +77,7 @@ class Docente(Usuario):
     def iniciar_sesion(correo, contrasena):
         conn = conectar()
         cursor = conn.cursor()
-        cursor.execute("SELECT id, nombre, contrasena FROM docentes WHERE correo = ?", (correo,))
+        cursor.execute("SELECT id, nombre, contrasena FROM docentes WHERE nombre = ?", (correo,))
         fila = cursor.fetchone()
         conn.close()
         if not fila:

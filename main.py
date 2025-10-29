@@ -15,7 +15,7 @@ def mostrar_terminos():
 
 root = tk.Tk()
 root.title("UOscheduled")
-root.geometry("500x400")
+root.geometry("800x600")
 root.configure(bg="#e8f8f5")
 
 tk.Label(
