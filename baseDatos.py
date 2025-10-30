@@ -35,6 +35,7 @@ def crear_tablas():
             nombre TEXT NOT NULL,
             aula TEXT NOT NULL,
             hora_inicio TEXT NOT NULL,
+            dias_semana TEXT NOT NULL,
             FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
             FOREIGN KEY (docente_id) REFERENCES docentes(id)
         )

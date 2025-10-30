@@ -56,7 +56,7 @@ def ventana_login_docente(principal):
     win = tk.Toplevel(principal)
     win.geometry("400x250")
 
-    tk.Label(win, text="Nombre:").pack(pady=10)
+    tk.Label(win, text="Usuario:").pack(pady=10)
     entry_nombre= tk.Entry(win)
     entry_nombre.pack(pady=5)
 

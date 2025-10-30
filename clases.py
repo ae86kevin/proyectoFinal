@@ -36,10 +36,10 @@ class Alumno(Usuario):
 
 
     @staticmethod
-    def iniciar_sesion(correo, contrasena):
+    def iniciar_sesion(nombre, contrasena):
         conn = conectar()
         cursor = conn.cursor()
-        cursor.execute("SELECT id, nombre, contrasena FROM alumnos WHERE correo = ?", (correo,))
+        cursor.execute("SELECT id, nombre, contrasena FROM alumnos WHERE nombre = ?", (nombre,))
         fila = cursor.fetchone()
         conn.close()
         if not fila:
@@ -74,10 +74,10 @@ class Docente(Usuario):
 
 
     @staticmethod
-    def iniciar_sesion(correo, contrasena):
+    def iniciar_sesion(nombre, contrasena):
         conn = conectar()
         cursor = conn.cursor()
-        cursor.execute("SELECT id, nombre, contrasena FROM docentes WHERE nombre = ?", (correo,))
+        cursor.execute("SELECT id, nombre, contrasena FROM docentes WHERE nombre = ?", (nombre,))
         fila = cursor.fetchone()
         conn.close()
         if not fila:

@@ -23,5 +23,5 @@ def enviar_correo(destinatario, asunto, mensaje):
         print(f"Correo enviado a {destinatario}")
         return True
     except Exception as e:
-        print("erro enviado correo:", e)
+        print("completado ", e)
         return False
