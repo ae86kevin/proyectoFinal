@@ -18,6 +18,7 @@ def crear_tablas():
         )
     """)
 
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS docentes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +28,7 @@ def crear_tablas():
         )
     """)
 
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cursos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,8 +36,8 @@ def crear_tablas():
             docente_id INTEGER,
             nombre TEXT NOT NULL,
             aula TEXT NOT NULL,
-            hora_inicio TEXT NOT NULL,
-            dias_semana TEXT NOT NULL,
+            hora_inicio TEXT,            
+            dias_semana TEXT NOT NULL,  
             FOREIGN KEY (alumno_id) REFERENCES alumnos(id),
             FOREIGN KEY (docente_id) REFERENCES docentes(id)
         )

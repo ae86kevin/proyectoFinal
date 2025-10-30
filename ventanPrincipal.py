@@ -38,7 +38,6 @@ def abrir_panel_principal(master, usuario, rol):
              bg="#f8f9fa",
              fg="#16a085").place(x=140, y=20)
 
-    # ===== BOTONES =====
     def crear_boton(texto, comando=None):
         return tk.Button(
             ventana,
@@ -190,7 +189,6 @@ def abrir_panel_principal(master, usuario, rol):
     crear_boton("Volver", volver).place(x=260, y=340)
     ventana.resizable(False, False)
 
-# ===== FORMULARIO DE CURSOS CON SCROLL Y DÍAS =====
 def abrir_formulario_cursos(usuario_id, cantidad, rol):
     win = tk.Toplevel()
     win.title(f"Agregar {cantidad} curso(s)")
@@ -313,12 +311,14 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
 
             for curso, aula, dias_horas in cursos_guardados:
                 for dh in dias_horas:
-                    dia, hora = dh.split(":")
+                    dia, hora = dh.split(":", 1)
                     mensaje = f"Hola {nombre_usuario},\n\nTu curso {curso} (Aula: {aula}) empieza a las {hora}."
                     if dia in dias_funcion:
                         dias_funcion[dia].at(hora).do(
                             lambda c=correo_destino, m=mensaje: enviar_correo(c, "Recordatorio de curso", m)
                         )
+
+
 
         messagebox.showinfo("Éxito", "Cursos guardados y notificaciones programadas.")
         win.destroy()
