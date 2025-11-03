@@ -33,11 +33,10 @@ def abrir_ventana_rol(master):
     tk.Button(siguiente, text="Alumno", command=lambda: mostrarOpciones(siguiente, "Alumno"), **estilo_boton).pack(pady=10)
     tk.Button(siguiente, text="Docente", command=lambda: mostrarOpciones(siguiente, "Docente"), **estilo_boton).pack(pady=10)
 
-
 def mostrarOpciones(ventana, rol):
 
     principal = ventana.master
-    ventana.destroy()
+    ventana.destroy()  # La ventana de rol original se cierra
 
     ventanaOpciones = tk.Toplevel(principal)
     ventanaOpciones.geometry("500x420")
@@ -54,7 +53,7 @@ def mostrarOpciones(ventana, rol):
     estilo_boton = {
         "width": 20,
         "height": 2,
-        "font": ("Arial",22 , "bold"),
+        "font": ("Arial", 22, "bold"),
         "bg": "#1abc9c",
         "fg": "white",
         "activebackground": "#16a085",
@@ -77,10 +76,8 @@ def mostrarOpciones(ventana, rol):
                   cursor="hand2",
                   width=20,
                   height=2,
-                  command=lambda:
-                  ventana_registro_alumno(principal),
+                  command=lambda: [ventanaOpciones.withdraw(), ventana_registro_alumno(principal)]
                   ).pack(pady=10)
-
 
         tk.Button(ventanaOpciones,
                   text="Iniciar sesion",
@@ -94,14 +91,13 @@ def mostrarOpciones(ventana, rol):
                   cursor="hand2",
                   width=20,
                   height=2,
-                  command=lambda: ventana_login_alumno(principal),).pack(pady=10)
-
-
+                  command=lambda: [ventanaOpciones.withdraw(), ventana_login_alumno(principal)]
+                  ).pack(pady=10)
 
     elif rol == "Docente":
         tk.Button(ventanaOpciones,
                   text="Registrarse",
-                  font=("Arial",12,"bold"),
+                  font=("Arial", 12, "bold"),
                   bg="#3498db",
                   fg="white",
                   activebackground="#16a085",
@@ -111,7 +107,8 @@ def mostrarOpciones(ventana, rol):
                   cursor="hand2",
                   width=20,
                   height=2,
-                  command=lambda: ventana_registro_docente(principal), ).pack(pady=10)
+                  command=lambda: [ventanaOpciones.withdraw(), ventana_registro_docente(principal)]
+                  ).pack(pady=10)
 
         tk.Button(ventanaOpciones,
                   text="Iniciar sesión",
@@ -125,25 +122,16 @@ def mostrarOpciones(ventana, rol):
                   cursor="hand2",
                   width=20,
                   height=2,
-
-                  command=lambda: ventana_login_docente(principal),).pack(pady=10)
-
-
-
+                  command=lambda: [ventanaOpciones.withdraw(), ventana_login_docente(principal)]
+                  ).pack(pady=10)
 
     def volver():
         ventanaOpciones.destroy()
         abrir_ventana_rol(principal)
 
-
-
-
     def salir():
         ventanaOpciones.destroy()
         principal.destroy()
-
-
-
 
     tk.Button(ventanaOpciones, text="Volver",
               bg="#f39c12",
