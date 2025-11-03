@@ -9,6 +9,7 @@ CORREO_EMISOR = "ae86mm@gmail.com"
 CONTRASENA = os.getenv("PASSWORD")
 
 def enviar_correo(destinatario, asunto, mensaje):
+
     try:
         msg = MIMEText(mensaje)
         msg["Subject"] = asunto
@@ -20,8 +21,14 @@ def enviar_correo(destinatario, asunto, mensaje):
             server.login(CORREO_EMISOR, CONTRASENA)
             server.send_message(msg)
 
-        print(f"Correo enviado a {destinatario}")
+        print(f" Correo enviado correctamente a {destinatario}")
         return True
+    except smtplib.SMTPRecipientsRefused:
+        print(f"Error: destinatario rechazado -> {destinatario}")
+        return False
+    except smtplib.SMTPAuthenticationError:
+        print(" Error: falló la autenticación. Revisa tu App Password.")
+        return False
     except Exception as e:
-        print("completado ", e)
+        print(f" Error inesperado al enviar correo: {e}")
         return False

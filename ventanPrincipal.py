@@ -27,16 +27,10 @@ def abrir_panel_principal(master, usuario, rol):
         nombre_usuario = usuario[1] if usuario and len(usuario) > 1 else "Usuario"
         usuario_id = usuario[0] if usuario else None
 
-    tk.Label(ventana,
-             text=f"Bienvenido:",
-             font=("Arial", 12, "bold"),
-             bg="#f8f9fa",
-             fg="#2c3e50").place(x=40, y=20)
-    tk.Label(ventana,
-             text=nombre_usuario,
-             font=("Arial", 12),
-             bg="#f8f9fa",
-             fg="#16a085").place(x=140, y=20)
+    tk.Label(ventana, text="Bienvenido:", font=("Arial", 12, "bold"),
+             bg="#f8f9fa", fg="#2c3e50").place(x=40, y=20)
+    tk.Label(ventana, text=nombre_usuario, font=("Arial", 12),
+             bg="#f8f9fa", fg="#16a085").place(x=140, y=20)
 
     def crear_boton(texto, comando=None):
         return tk.Button(
@@ -312,13 +306,11 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
             for curso, aula, dias_horas in cursos_guardados:
                 for dh in dias_horas:
                     dia, hora = dh.split(":", 1)
-                    mensaje = f"Hola {nombre_usuario},\n\nTu curso {curso} (Aula: {aula}) empieza a las {hora}."
+                    mensaje = f"Hola {nombre_usuario},\n\nEl curso de {curso} comienza a las {hora} en aula {aula} Exitos."
                     if dia in dias_funcion:
                         dias_funcion[dia].at(hora).do(
                             lambda c=correo_destino, m=mensaje: enviar_correo(c, "Recordatorio de curso", m)
                         )
-
-
 
         messagebox.showinfo("Éxito", "Cursos guardados y notificaciones programadas.")
         win.destroy()
