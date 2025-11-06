@@ -36,8 +36,10 @@ def abrir_panel_principal(master, usuario, rol):
         return tk.Button(
             ventana,
             text=texto,
-            font=("Arial", 11, "bold"),
-            activebackground="#f8f9fa",
+            font=("Arial", 13, "bold"),
+            bg="#f8f9fa",
+            fg="#2c3e50",
+            activebackground="#d1f2eb",
             activeforeground="#16a085",
             relief="flat",
             bd=2,
@@ -88,23 +90,133 @@ def abrir_panel_principal(master, usuario, rol):
 
         win = tk.Toplevel(ventana)
         win.title("Modificar / Eliminar curso")
-        win.geometry("400x400")
+        win.geometry("400x600")
+        win.configure(bg="#f8f9fa")  # fondo gris claro uniforme
 
-        tk.Label(win, text="Selecciona un curso").pack(pady=10)
-        lista = tk.Listbox(win, width=45, height=10)
+        tk.Label(win, text="Selecciona un curso",
+                 font=("Arial", 14, "bold"),
+                 bg="#f8f9fa", fg="#2c3e50").pack(pady=10)
+
+        lista = tk.Listbox(win, width=45, height=10,
+                           font=("Arial", 11),
+                           bg="white", fg="#2c3e50", bd=1, relief="solid")
         lista.pack(pady=10)
 
         for c in cursos:
-            lista.insert(tk.END, f"{c[0]} - {c[1]} ({c[2]})")
+            lista.insert(tk.END, f"{c[1]} - Aula:  {c[2]} - Hora ({c[3]})")
 
-        tk.Label(win, text="Nuevo nombre:").pack()
-        entry_nombre = tk.Entry(win)
+        tk.Label(win, text="Nuevo nombre:",
+                 font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#2c3e50").pack(pady=5)
+        entry_nombre = tk.Entry(win, font=("Arial", 12),
+                                bg="white", fg="#2c3e50", bd=1, relief="solid")
         entry_nombre.pack(pady=5)
-        tk.Label(win, text="Nueva aula:").pack()
-        entry_aula = tk.Entry(win)
+
+        tk.Label(win, text="Nueva aula:",
+                 font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#2c3e50").pack(pady=5)
+        entry_aula = tk.Entry(win, font=("Arial", 12),
+                              bg="white", fg="#2c3e50", bd=1, relief="solid")
         entry_aula.pack(pady=5)
-        tk.Label(win, text="Nuevo horario (HH:MM):").pack()
-        entry_hora = tk.Entry(win)
+
+        tk.Label(win, text="Nuevo horario (HH:MM):",
+                 font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#2c3e50").pack(pady=5)
+        entry_hora = tk.Entry(win, font=("Arial", 12),
+                              bg="white", fg="#2c3e50", bd=1, relief="solid")
+        entry_hora.pack(pady=5)
+
+        def validar_hora(hora):
+            return bool(re.match(r"^(?:[01]\d|2[0-3]):[0-5]\d$", hora))
+
+        def guardar():
+            seleccion = lista.curselection()
+            if not seleccion:
+                messagebox.showwarning("Atención", "Selecciona un curso.")
+                return
+
+            curso_id = cursos[seleccion[0]][0]
+            nombre = entry_nombre.get().strip()
+            aula = entry_aula.get().strip()
+            hora = entry_hora.get().strip()
+
+            if not nombre or not aula or not hora:
+                messagebox.showwarning("Campos vacíos", "Completa todos los campos.")
+                return
+            if not validar_hora(hora):
+                messagebox.showerror("Error", "Ingrese la hora en formato 24h (HH:MM)")
+                return
+
+            conn = conectar()
+            cursor = conn.cursor()
+            cursor.execute("UPDATE cursos SET nombre=?, aula=?, hora_inicio=? WHERE id=?",
+                           (nombre, aula, hora, curso_id))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Éxito", "Curso modificado correctamente.")
+            win.destroy()
+
+        def eliminar():
+            seleccion = lista.curselection()
+            if not seleccion:
+                messagebox.showwarning("Atención", "Selecciona un curso.")
+                return
+            curso_id = cursos[seleccion[0]][0]
+            conn = conectar()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM cursos WHERE id=?", (curso_id,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Éxito", "Curso eliminado correctamente.")
+            win.destroy()
+
+        tk.Button(win, text="Guardar cambios",
+                  bg="#16a085", fg="white",
+                  font=("Arial", 11, "bold"),
+                  cursor="hand2", relief="flat").pack(pady=10)
+
+        tk.Button(win, text="Eliminar curso",
+                  bg="#e74c3c", fg="white",
+                  font=("Arial", 11, "bold"),
+                  cursor="hand2", relief="flat").pack(pady=10)
+
+    def modificar_curso():
+        cursos = listar_cursos()
+        if not cursos:
+            messagebox.showinfo("Sin cursos", "No tienes cursos asignados.")
+            return
+
+        win = tk.Toplevel(ventana)
+        win.title("Modificar / Eliminar curso")
+        win.configure(bg="#f4f6f7")
+        win.geometry("400x600")
+        tk.Label(win, text="Selecciona un curso",
+                 font=("Arial", 14, "bold"), bg="#f4f6f7", fg="#2c3e50").pack(pady=10)
+
+        lista = tk.Listbox(win, width=45, height=10,
+                           font=("Arial", 11),
+                           bg="#ffffff", fg="#2c3e50",
+                           selectbackground="#d0ece7",
+                           selectforeground="#2c3e50",
+                           relief="flat", bd=2)
+        lista.pack(pady=10)
+
+        for c in cursos:
+            lista.insert(tk.END, f"Curso:{c[1]}  Aula: {c[2]}  Hora: {c[3]}")
+
+        tk.Label(win, text="Nuevo nombre:",
+                 font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#2c3e50").pack(pady=5)
+        entry_nombre = tk.Entry(win, font=("Arial", 12),
+                                bg="white", fg="#2c3e50", bd=1, relief="solid")
+        entry_nombre.pack(pady=5)
+
+        tk.Label(win, text="Nueva aula:",
+                 font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#2c3e50").pack(pady=5)
+        entry_aula = tk.Entry(win, font=("Arial", 12),
+                              bg="white", fg="#2c3e50", bd=1, relief="solid")
+        entry_aula.pack(pady=5)
+
+        tk.Label(win, text="Nuevo horario (HH:MM):",
+                 font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#2c3e50").pack(pady=5)
+        entry_hora = tk.Entry(win, font=("Arial", 12),
+                              bg="white", fg="#2c3e50", bd=1, relief="solid")
         entry_hora.pack(pady=5)
 
         def validar_hora(hora):
@@ -154,7 +266,8 @@ def abrir_panel_principal(master, usuario, rol):
         tk.Button(win, text="Guardar cambios", bg="#16a085", fg="white", command=guardar).pack(pady=10)
         tk.Button(win, text="Eliminar curso", bg="#e74c3c", fg="white", command=eliminar).pack(pady=10)
 
-    crear_boton("Agregar Cursos", agregar_cursos).place(x=110, y=y)
+    crear_boton("Agregar Cursos",
+                agregar_cursos).place(x=110, y=y)
     crear_boton("Modificar / Eliminar", modificar_curso).place(x=110, y=y + espacio)
     crear_boton("Mostrar cursos", lambda: mostrar_cursos_popup()).place(x=110, y=y + espacio * 2)
 
@@ -166,26 +279,59 @@ def abrir_panel_principal(master, usuario, rol):
         win = tk.Toplevel(ventana)
         win.title("Cursos Registrados")
         win.geometry("400x300")
-        tk.Label(win, text="Cursos registrados:").pack(pady=10)
-        lista = tk.Listbox(win, width=50, height=12)
+        win.configure(bg="#f4f6f7")
+
+        tk.Label(win, text="Cursos registrados:",
+                 font=("Arial", 14, "bold"),
+                 bg="#f4f6f7",
+                 fg="#2c3e50").pack(pady=10)
+
+        lista = tk.Listbox(win, width=50, height=12,
+                           font=("Arial", 11),
+                           bg="#ffffff", fg="#2c3e50",
+                           selectbackground="#d0ece7",
+                           selectforeground="#2c3e50",
+                           relief="flat", bd=2)
         lista.pack(pady=10)
+
         for c in cursos:
-            lista.insert(tk.END, f"{c[1]} - Aula: {c[2]} - Días: {c[4]}")
+            lista.insert(tk.END, f"Curso: {c[1]} Aula: {c[2]} Hora: {c[3]} Días: {c[4]}")
 
     def salir():
         master.destroy()
 
     def volver():
         ventana.destroy()
-        messagebox.showinfo("Volver", "Regresando al menú...")
+        master.deiconify()
 
-    crear_boton("Salir", salir).place(x=100, y=340)
-    crear_boton("Volver", volver).place(x=260, y=340)
-    ventana.resizable(False, False)
+    tk.Button(
+        ventana,
+        text="Volver",
+        bg="#f39c12",
+        fg="white",
+        font=("Arial", 10, "bold"),
+        command=volver,
+        bd=0,
+        relief="flat",
+        cursor="hand2"
+    ).place(x=100, y=340, width=100, height=35)
+
+    tk.Button(
+        ventana,
+        text="Salir",
+        bg="#e74c3c",
+        fg="white",
+        font=("Arial", 10, "bold"),
+        command=salir,
+        bd=0,
+        relief="flat",
+        cursor="hand2"
+    ).place(x=260, y=340, width=100, height=35)
+
 
 def abrir_formulario_cursos(usuario_id, cantidad, rol):
     win = tk.Toplevel()
-    win.title(f"Agregar {cantidad} curso(s)")
+    win.title(f"Agregar {cantidad} ")
     win.geometry("780x600")
 
     tk.Label(win, text=f"Agregar {cantidad} curso(s)", font=("Arial", 12, "bold")).pack(pady=10)
