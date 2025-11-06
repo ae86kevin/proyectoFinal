@@ -133,6 +133,7 @@ def mostrarOpciones(ventana, rol):
         ventanaOpciones.destroy()
         principal.destroy()
 
+
     tk.Button(ventanaOpciones, text="Volver",
               bg="#f39c12",
               fg="white",
