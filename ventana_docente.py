@@ -9,19 +9,31 @@ def ventana_registro_docente(master):
     win.geometry("500x420")
     win.configure(bg="#f4f6f7")
 
-    tk.Label(win, text="Nombre:", bg="#f4f6f7").pack(pady=5)
+    tk.Label(win, text="Nombre:",
+             font=("Arial", 13, "bold"),
+             bg="#f4f6f7",
+             fg="#2c3e50").pack(pady=5)
     entry_nombre = tk.Entry(win)
     entry_nombre.pack(pady=5)
 
-    tk.Label(win, text="Correo:", bg="#f4f6f7").pack(pady=5)
+    tk.Label(win, text="Correo:",
+             font=("Arial", 13, "bold"),
+             bg="#f4f6f7",
+             fg="#2c3e50").pack(pady=5)
     entry_correo = tk.Entry(win)
     entry_correo.pack(pady=5)
 
-    tk.Label(win, text="Contraseña:", bg="#f4f6f7").pack(pady=5)
+    tk.Label(win, text="Contraseña:",
+             font=("Arial", 13, "bold"),
+             bg="#f4f6f7",
+             fg="#2c3e50").pack(pady=5)
     entry_pass = tk.Entry(win, show="*")
     entry_pass.pack(pady=5)
 
-    tk.Label(win, text="Confirmar contraseña:", bg="#f4f6f7").pack(pady=5)
+    tk.Label(win, text="Confirmar contraseña:",
+             font=("Arial", 13, "bold"),
+             bg="#f4f6f7",
+             fg="#2c3e50").pack(pady=5)
     entry_pass2 = tk.Entry(win, show="*")
     entry_pass2.pack(pady=5)
 
@@ -42,13 +54,13 @@ def ventana_registro_docente(master):
         if Docente.registrar(nombre, correo, contrasena1):
             messagebox.showinfo("Éxito", "Docente registrado correctamente.")
             win.destroy()
-            master.deiconify()  # Mostrar la ventana principal nuevamente
+            master.deiconify()
         else:
             messagebox.showerror("Error", "Correo ya registrado")
 
-    tk.Button(win, text="Registrar", command=registrar, fg="white", bg="green").pack(pady=10)
+    tk.Button(win, text="Registrar",  command=registrar, fg="white", bg="#2c3e50",
+              activebackground="#34495e", activeforeground="white", font=("Arial", 13, "bold"), width=18, bd=3).pack(pady=30)
 
-    # Botones Volver y Salir
     tk.Button(win, text="Volver",
               bg="#f39c12", fg="white", font=("Arial", 10, "bold"),
               command=lambda: [win.destroy(), master.deiconify()],

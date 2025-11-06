@@ -229,7 +229,7 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
             var_dia = tk.BooleanVar()
             chk = tk.Checkbutton(sub, text=dia, variable=var_dia)
             chk.pack(side="left")
-            tk.Label(sub, text="Hora (HH:MM):").pack(side="left", padx=3)
+            tk.Label(sub, text="Hora (HH:MM)(formato 24hrs").pack(side="left", padx=3)
             entry_hora = tk.Entry(sub, width=8)
             entry_hora.pack(side="left", padx=3)
             dias_horas.append((dia, var_dia, entry_hora))
