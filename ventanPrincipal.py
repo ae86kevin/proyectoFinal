@@ -7,10 +7,17 @@ import threading
 import time
 import re
 
+def centrar_ventana(ventana, ancho, alto):
+    ventana.update_idletasks()
+    x = (ventana.winfo_screenwidth() // 2) - (ancho // 2)
+    y = (ventana.winfo_screenheight() // 2) - (alto // 2)
+    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
+
+
 def run_schedule():
     while True:
         schedule.run_pending()
-        time.sleep(60)
+        time.sleep(1)
 
 threading.Thread(target=run_schedule, daemon=True).start()
 
@@ -455,7 +462,7 @@ def abrir_formulario_cursos(usuario_id, cantidad, rol):
                     mensaje = f"Hola {nombre_usuario},\n\nEl curso de {curso} comienza a las {hora} en aula {aula} Exitos."
                     if dia in dias_funcion:
                         dias_funcion[dia].at(hora).do(
-                            lambda c=correo_destino, m=mensaje: enviar_correo(c, "Recordatorio de curso", m)
+                            enviar_correo, correo_destino, "Recordatorio de curso", mensaje
                         )
 
         messagebox.showinfo("Éxito", "Cursos guardados y notificaciones programadas.")

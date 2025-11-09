@@ -2,6 +2,14 @@ import tkinter as tk
 from ventana_alumno import ventana_registro_alumno, ventana_login_alumno
 from ventana_docente import ventana_registro_docente, ventana_login_docente
 
+
+def centrar_ventana(ventana, ancho, alto):
+    ventana.update_idletasks()
+    x = (ventana.winfo_screenwidth() // 2) - (ancho // 2)
+    y = (ventana.winfo_screenheight() // 2) - (alto // 2)
+    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
+
+
 def abrir_ventana_rol(master):
 
     master.withdraw()

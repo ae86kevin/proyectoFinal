@@ -4,6 +4,11 @@ from baseDatos import crear_tablas
 from ventana_rol import abrir_ventana_rol
 
 crear_tablas()
+def centrar_ventana(ventana, ancho, alto):
+    ventana.update_idletasks()
+    x = (ventana.winfo_screenwidth() // 2) - (ancho // 2)
+    y = (ventana.winfo_screenheight() // 2) - (alto // 2)
+    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
 
 def mostrar_terminos():
     messagebox.showinfo(

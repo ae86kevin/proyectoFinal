@@ -3,6 +3,13 @@ from tkinter import messagebox
 from clases import Docente
 from ventanPrincipal import abrir_panel_principal
 
+def centrar_ventana(ventana, ancho, alto):
+    ventana.update_idletasks()
+    x = (ventana.winfo_screenwidth() // 2) - (ancho // 2)
+    y = (ventana.winfo_screenheight() // 2) - (alto // 2)
+    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
+
+
 def ventana_registro_docente(master):
     win = tk.Toplevel(master)
     win.title("Registro de Docente")
@@ -55,6 +62,7 @@ def ventana_registro_docente(master):
             messagebox.showinfo("Éxito", "Docente registrado correctamente.")
             win.destroy()
             master.deiconify()
+
         else:
             messagebox.showerror("Error", "Correo ya registrado")
 
