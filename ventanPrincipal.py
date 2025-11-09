@@ -98,7 +98,7 @@ def abrir_panel_principal(master, usuario, rol):
         win = tk.Toplevel(ventana)
         win.title("Modificar / Eliminar curso")
         win.geometry("400x600")
-        win.configure(bg="#f8f9fa")  # fondo gris claro uniforme
+        win.configure(bg="#f8f9fa")
 
         tk.Label(win, text="Selecciona un curso",
                  font=("Arial", 14, "bold"),
